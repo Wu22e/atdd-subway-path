@@ -1,8 +1,6 @@
 package nextstep.subway.domain;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,11 +55,10 @@ public class Line {
     }
 
     public void addSection(Station upStation, Station downStation, int distance) {
-        validateDistance(distance);
+        Section section = new Section(this, upStation, downStation, distance);
+        this.sections.updateSection(section);
 
-        updateSection(upStation, downStation, distance);
-
-        this.sections.addNewSection(new Section(this, upStation, downStation, distance));
+        this.sections.addSection(new Section(this, upStation, downStation, distance));
     }
 
     private void updateSection(Station upStation, Station downStation, int distance) {
@@ -76,12 +73,6 @@ public class Line {
 
         if (isDownStationExist) {
             this.sections.updateDownStationBetweenSection(upStation, downStation, distance);
-        }
-    }
-
-    private void validateDistance(int distance) {
-        if (distance <= 0) {
-            throw new IllegalArgumentException("등록하고자 하는 구간의 길이가 0 이거나 음수일 수 없습니다.");
         }
     }
 
@@ -138,21 +129,7 @@ public class Line {
         }
     }
 
-
     public List<Station> getStations() {
-        if (this.sections.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<Station> stations = new ArrayList<>();
-        Station station = this.sections.findFirstUpStation();
-        stations.add(station);
-
-        while (this.sections.isPresentNextSection(station)) {
-            Section nextSection = this.sections.findNextSection(station);
-            station = nextSection.getDownStation();
-            stations.add(station);
-        }
-        return stations;
+        return this.sections.getStations();
     }
 }

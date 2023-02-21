@@ -28,9 +28,10 @@ public class Section {
     }
 
     public Section(Line line, Station upStation, Station downStation, int distance) {
-        this.line = line;
-        this.upStation = upStation;
-        this.downStation = downStation;
+        validateNegativeDistance(distance);
+        this.line =  Objects.requireNonNull(line, "line must not be null");
+        this.upStation = Objects.requireNonNull(upStation, "upStation must not be null");
+        this.downStation = Objects.requireNonNull(downStation, "downStation must not be null");
         this.distance = distance;
     }
 
@@ -75,8 +76,19 @@ public class Section {
     }
 
     private void validateDistance(int distance) {
+        validateNegativeDistance(distance);
+        validateDistanceCompareOtherDistance(distance);
+    }
+
+    private void validateDistanceCompareOtherDistance(int distance) {
         if (this.distance <= distance) {
             throw new IllegalArgumentException("등록할 구간의 길이가 등록된 구간 길이보다 작아야 합니다.");
+        }
+    }
+
+    private void validateNegativeDistance(int distance) {
+        if (distance <= 0) {
+            throw new IllegalArgumentException("등록하고자 하는 구간의 길이가 0 이거나 음수일 수 없습니다.");
         }
     }
 
