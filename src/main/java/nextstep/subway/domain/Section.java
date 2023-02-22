@@ -55,12 +55,30 @@ public class Section {
         return distance;
     }
 
+    public boolean hasStation(Section section) {
+        return equalUpStation(section.upStation) || equalDownStation(section.downStation);
+    }
+
+    public boolean hasAnyStation(Section section) {
+        return equalUpStation(section.upStation) || equalUpStation(section.downStation)
+                || equalDownStation(section.upStation) || equalDownStation(section.downStation);
+    }
+
     public boolean equalDownStation(Station station) {
         return this.downStation == station;
     }
 
     public boolean equalUpStation(Station station) {
         return this.upStation == station;
+    }
+
+    public void updateStation(Section section) {
+        if (equalUpStation(section.upStation)) {
+            updateUpStation(section.downStation, section.distance);
+        }
+        if (equalDownStation(section.downStation)) {
+            updateDownStation(section.upStation, section.distance);
+        }
     }
 
     public void updateUpStation(Station station, int distance) {

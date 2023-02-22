@@ -35,33 +35,56 @@ public class Sections {
     }
 
     public void updateSection(Section section) {
-        boolean isUpStationExist = isExistInLine(upStation);
-        boolean isDownStationExist = isExistInLine(downStation);
-
-        validateSection(isUpStationExist, isDownStationExist);
-
-        if (isUpStationExist) {
-            this.sections.updateUpStationBetweenSection(upStation, downStation, distance);
-        }
-
-        if (isDownStationExist) {
-            this.sections.updateDownStationBetweenSection(upStation, downStation, distance);
-        }
-    }
-
-    private void validateSection(boolean isUpStationExist, boolean isDownStationExist) {
         if (this.sections.isEmpty()) {
             return;
         }
 
-        if (isUpStationExist && isDownStationExist) {
-            throw new IllegalArgumentException("이미 등록된 구간입니다.");
-        }
+        validateSection(section);
+        this.sections.stream()
+                .filter(it -> it.hasStation(section))
+                .forEach(it -> it.updateStation(section));
+    }
 
-        if (!isUpStationExist && !isDownStationExist) {
+    private void validateSection(Section section) {
+        validateContainSection(section);
+        validateNotContainStation(section);
+    }
+
+    private void validateNotContainStation(Section section) {
+        if (!hasStations(section)) {
             throw new IllegalArgumentException("등록할 구간의 상행역과 하행역이 노선에 포함되어 있지 않아 등록할 수 없습니다.");
         }
     }
+
+    private boolean hasStations(Section section) {
+        return this.sections.stream()
+                .anyMatch(it -> it.hasAnyStation(section));
+    }
+
+    private void validateContainSection(Section section) {
+        if (hasSection(section)) {
+            throw new IllegalArgumentException("이미 등록된 구간입니다.");
+        }
+    }
+
+    private boolean hasSection(Section section) {
+        return this.sections.stream()
+                .anyMatch(it -> it.equals(section));
+    }
+
+//    private void validateSection(boolean isUpStationExist, boolean isDownStationExist) {
+//        if (this.sections.isEmpty()) {
+//            return;
+//        }
+//
+//        if (isUpStationExist && isDownStationExist) {
+//            throw new IllegalArgumentException("이미 등록된 구간입니다.");
+//        }
+//
+//        if (!isUpStationExist && !isDownStationExist) {
+//            throw new IllegalArgumentException("등록할 구간의 상행역과 하행역이 노선에 포함되어 있지 않아 등록할 수 없습니다.");
+//        }
+//    }
 
     public void addSection(Section section) {
         this.sections.add(section);

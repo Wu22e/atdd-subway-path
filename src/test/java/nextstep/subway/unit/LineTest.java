@@ -100,7 +100,7 @@ class LineTest {
     @Test
     void addLineSectionExceptionAllStationInLine() {
         // when & then
-        assertThatThrownBy(() -> 신분당선.addSection(강남역, 판교역, 3))
+        assertThatThrownBy(() -> 신분당선.addSection(강남역, 판교역, 10))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

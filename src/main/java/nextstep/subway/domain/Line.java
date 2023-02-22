@@ -57,37 +57,7 @@ public class Line {
     public void addSection(Station upStation, Station downStation, int distance) {
         Section section = new Section(this, upStation, downStation, distance);
         this.sections.updateSection(section);
-
         this.sections.addSection(new Section(this, upStation, downStation, distance));
-    }
-
-    private void updateSection(Station upStation, Station downStation, int distance) {
-        boolean isUpStationExist = isExistInLine(upStation);
-        boolean isDownStationExist = isExistInLine(downStation);
-
-        validateAddSection(isUpStationExist, isDownStationExist);
-
-        if (isUpStationExist) {
-            this.sections.updateUpStationBetweenSection(upStation, downStation, distance);
-        }
-
-        if (isDownStationExist) {
-            this.sections.updateDownStationBetweenSection(upStation, downStation, distance);
-        }
-    }
-
-    private void validateAddSection(boolean isUpStationExist, boolean isDownStationExist) {
-        if (this.sections.isEmpty()) {
-            return;
-        }
-
-        if (isUpStationExist && isDownStationExist) {
-            throw new IllegalArgumentException("이미 등록된 구간입니다.");
-        }
-
-        if (!isUpStationExist && !isDownStationExist) {
-            throw new IllegalArgumentException("등록할 구간의 상행역과 하행역이 노선에 포함되어 있지 않아 등록할 수 없습니다.");
-        }
     }
 
     public boolean isExistInLine(Station station) {
